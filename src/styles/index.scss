@@ -1,0 +1,37 @@
+body {
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-Thin.ttf) format("truetype");
+    font-weight: 100;
+  }
+
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-Light.ttf) format("truetype");
+    font-weight: 300;
+  }
+
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-Regular.ttf) format("truetype");
+    font-weight: normal;
+  }
+
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-Medium.ttf) format("truetype");
+    font-weight: 500;
+  }
+
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-SemiBold.ttf) format("truetype");
+    font-weight: 600;
+  }
+
+  @font-face {
+    font-family: "Recoleta";
+    src: url(../../public/fonts/Recoleta-Bold.ttf) format("truetype");
+    font-weight: 700;
+  }
+}

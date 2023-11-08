@@ -1,0 +1,9 @@
+@import "./variables.scss";
+
+.layout-container {
+  .header {
+    background-color: $secondary;
+    padding: 1.25rem 1rem 1.25rem 1.2rem;
+    border-bottom: 1px solid $primary;
+  }
+}

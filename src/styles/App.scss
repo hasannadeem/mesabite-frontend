@@ -1,0 +1,71 @@
+@import "./variables.scss";
+
+@import "https://fonts.googleapis.com/css?family=Roboto:400,500,700";
+@import "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700";
+
+.App {
+  margin: 0;
+  background-color: #fff6df;
+  max-width: 400px;
+  margin: 0 auto;
+  min-height: 100vh;
+  color: $primary;
+
+  @media (min-width: 768px) {
+    margin: 1rem auto;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+
+  .font-family-montserrat {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .font-family-roboto {
+    font-family: "Roboto", sans-serif;
+  }
+
+  .fw-semi-bold {
+    font-weight: 500;
+  }
+
+  .w-94 {
+    width: 94% !important;
+  }
+
+  h1 {
+    font-family: "Recoleta", sans-serif;
+  }
+
+  .default-input-field {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 16px;
+    background-color: transparent;
+    color: $primary;
+
+    border: 8px solid transparent;
+    border-image: url("../assets/images/border.svg") 8 stretch;
+
+    /* Fallback for browsers that don't support border-image */
+    border-style: solid;
+    border-color: #852e2c;
+  }
+
+  .custom-pagination {
+    .page-item {
+      .page-link {
+        color: $light;
+        background-color: $secondary;
+        border-color: $light;
+      }
+
+      &.active .page-link {
+        background-color: $primary;
+        border-color: $primary;
+      }
+    }
+  }
+}
