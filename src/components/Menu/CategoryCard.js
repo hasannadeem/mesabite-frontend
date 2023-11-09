@@ -15,7 +15,7 @@ import { getImageUrl } from "../../utils";
 import { APIS, ROUTES } from "../../constants/routes";
 import { TEST_IDS } from "../../constants";
 
-const CategoryCard = ({ className, category, updateMenus }) => {
+const CategoryCard = ({ className, category }) => {
   const navigate = useNavigate();
 
   const handleDeleteCategoryFolder = async () => {
@@ -28,7 +28,6 @@ const CategoryCard = ({ className, category, updateMenus }) => {
         const response = await axios.delete(`${APIS.category}/${category.id}`);
 
         if (response.status === 200) {
-          updateMenus();
           toast.success("Category has been successfully deleted!");
         }
       } catch (error) {

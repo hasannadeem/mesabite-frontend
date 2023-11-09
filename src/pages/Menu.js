@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Pagination from "react-bootstrap/Pagination";
 import { debounce } from "lodash";
@@ -8,6 +8,7 @@ import "../styles/Menu.scss";
 import CategoryCard from "../components/Menu/CategoryCard";
 import CategoryFolder from "../components/Menu/CategoryFolder";
 import Layout from "../components/Layout";
+import Spinner from "../components/Layout/Spinner";
 
 // Icons
 import PlusOutline from "../assets/images/plus-outline.svg";
@@ -16,63 +17,59 @@ import SearchIcon from "../assets/images/search-icon.svg";
 
 // Store
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMenus, selectMenus } from "../store/slices/menuSlice";
+import {
+  fetchMenus,
+  selectMenus,
+  setActivePage,
+} from "../store/slices/menuSlice";
 
 // Constants
 import { ROUTES } from "../constants/routes";
 
 const Menu = () => {
-  const [activePage, setActivePage] = useState(1);
   const [search, setSearch] = useState("");
-  const [triggerUpdateMenus, setTriggerUpdateMenus] = useState(Date.now());
 
   // Hooks
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data: menus, totalPages } = useSelector(selectMenus);
+  const {
+    loading,
+    data: menus,
+    totalPages,
+    activePage,
+  } = useSelector(selectMenus);
 
   // Vars
   const paginationItems = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   const debouncedSearch = useCallback(
-    debounce(
-      (query) =>
-        dispatch(
-          fetchMenus({
-            search: query,
-            page: 1,
-          })
-        ),
-      500
-    ),
+    debounce((query) => {
+      dispatch(setActivePage(1));
+      dispatch(
+        fetchMenus({
+          search: query,
+          page: 1,
+        })
+      );
+    }, 500),
     [fetchMenus]
   );
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-    setActivePage(1);
     debouncedSearch(e.target.value);
   };
 
-  const handleUpdateMenus = () => {
-    setActivePage(1);
-    setTriggerUpdateMenus(Date.now);
-  };
-
-  useEffect(() => {
-    const controller = new AbortController();
-    window.scrollTo(0, 0);
+  const handlePageChange = (page) => {
+    dispatch(setActivePage(page));
     dispatch(
       fetchMenus({
         search,
-        page: activePage,
-        signal: controller.signal,
+        page,
       })
     );
-
-    return () => controller.abort();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activePage, fetchMenus, triggerUpdateMenus]);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <Layout>
@@ -90,44 +87,44 @@ const Menu = () => {
           />
         </div>
 
-        <button
-          className="d-flex align-items-center create-category-folder-button"
-          onClick={() => navigate(ROUTES.createCategoryFolder)}
-        >
-          <img src={PlusOutline} height={15} width={15} alt="create-category" />
-          <span className="ms-2 font-family-roboto fw-semi-bold">
-            Create Category Folder
-          </span>
-        </button>
+        {activePage === 1 && (
+          <button
+            className="d-flex align-items-center create-category-folder-button"
+            onClick={() => navigate(ROUTES.createCategoryFolder)}
+          >
+            <img
+              src={PlusOutline}
+              height={15}
+              width={15}
+              alt="create-category"
+            />
+            <span className="ms-2 font-family-roboto fw-semi-bold">
+              Create Category Folder
+            </span>
+          </button>
+        )}
 
         {menus.map((menu) =>
           menu.type === "category_folder" ? (
-            <CategoryFolder
-              key={menu.id}
-              className="mt-3"
-              menu={menu}
-              updateMenus={handleUpdateMenus}
-            />
+            <CategoryFolder key={menu.id} className="mt-3" menu={menu} />
           ) : (
-            <CategoryCard
-              key={menu.id}
-              className="w-94 mt-3"
-              category={menu}
-              updateMenus={handleUpdateMenus}
-            />
+            <CategoryCard key={menu.id} className="w-94 mt-3" category={menu} />
           )
         )}
 
-        <div
-          className="d-flex flex-column align-items-center justify-content-center gap-3 new-category-button mt-3"
-          onClick={() => navigate(ROUTES.createCategory)}
-        >
-          <img src={PlusIcon} alt="upload-img" width={78} height={78} />
-          <div className="mt-4 font-family-montserrat text-center">
-            Add new category to your menu
+        {activePage === 1 && (
+          <div
+            className="d-flex flex-column align-items-center justify-content-center gap-3 new-category-button mt-3"
+            onClick={() => navigate(ROUTES.createCategory)}
+          >
+            <img src={PlusIcon} alt="upload-img" width={78} height={78} />
+            <div className="mt-4 font-family-montserrat text-center">
+              Add new category to your menu
+            </div>
           </div>
-        </div>
+        )}
       </div>
+
       <div className="custom-pagination">
         {paginationItems.length > 1 ? (
           <Pagination size="sm" className="d-flex justify-content-center pb-3">
@@ -135,7 +132,7 @@ const Menu = () => {
               <Pagination.Item
                 key={item}
                 active={item === activePage}
-                onClick={() => setActivePage(item)}
+                onClick={() => handlePageChange(item)}
               >
                 {item}
               </Pagination.Item>
@@ -143,6 +140,8 @@ const Menu = () => {
           </Pagination>
         ) : null}
       </div>
+
+      {loading && <Spinner />}
     </Layout>
   );
 };

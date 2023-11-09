@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { createConsumer } from "@rails/actioncable";
 import "../src/styles/App.scss";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -13,10 +14,53 @@ import NewCategory from "./pages/NewCategory";
 import EditCategory from "./pages/EditCategory";
 import NotFound from "./pages/NotFound";
 
+// Store
+import { useDispatch } from "react-redux";
+import { fetchMenus } from "./store/slices/menuSlice";
+
 // Constants
+import { WEBSOCKET_URL } from "./constants";
 import { ROUTES } from "./constants/routes";
 
+// Hooks
+import useUpdateMenus from "./hooks/useUpdateMenus";
+
+const consumer = createConsumer(WEBSOCKET_URL);
+
 function App() {
+  // Hooks
+  const dispatch = useDispatch();
+  const { updateCategory, updateCategoryFolders } = useUpdateMenus();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    dispatch(
+      fetchMenus({
+        search: "",
+        page: 1,
+        signal: controller.signal,
+      })
+    );
+
+    consumer.subscriptions.create("CategoryChannel", {
+      received(data) {
+        updateCategory(data);
+      },
+    });
+
+    consumer.subscriptions.create("CategoryFolderChannel", {
+      received(data) {
+        updateCategoryFolders(data);
+      },
+    });
+
+    return () => {
+      controller.abort();
+      consumer.disconnect();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="App">
       <Router>

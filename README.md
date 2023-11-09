@@ -1,6 +1,6 @@
 # Mesabite - Test Project
 
-React test project which manages categories and their folders of menus.
+React test project which creates dynamic menu on the home page, displaying categories and their corresponding folders. Users can easily update or delete categories and folders.
 
 # Technologies Used
 

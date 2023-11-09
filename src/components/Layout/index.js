@@ -8,7 +8,7 @@ import ChevronDownIcon from "../../assets/images/chevron-down.svg";
 
 const Layout = ({ children }) => {
   return (
-    <div className="layout-container">
+    <div className="layout-container position-relative">
       <header className="header d-flex justify-content-between align-items-center w-100">
         <img src={MenuIcon} alt="menu" height={11.5} width={18.5} />
         <span className="d-flex align-items-center">

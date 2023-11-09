@@ -9,7 +9,7 @@ import CloseIcon from "../../assets/images/close-icon.svg";
 import UploadIcon from "../../assets/images/upload-icon.svg";
 
 // Constants
-import { APIS, ROUTES } from "../../constants/routes";
+import { APIS } from "../../constants/routes";
 import { getImageUrl } from "../../utils";
 
 const NewCategoryForm = ({ data, categoryFolderId, isEditView }) => {
@@ -51,7 +51,7 @@ const NewCategoryForm = ({ data, categoryFolderId, isEditView }) => {
             ? "Category has been successfully updated"
             : "Category has been successfully added to your menu!"
         );
-        navigate(ROUTES.menu);
+        navigateBack();
       }
     } catch (error) {
       const defaultMessage = isEditView
@@ -69,7 +69,7 @@ const NewCategoryForm = ({ data, categoryFolderId, isEditView }) => {
   };
 
   const navigateBack = () => {
-    navigate(ROUTES.menu);
+    navigate(-1);
   };
 
   useEffect(() => {

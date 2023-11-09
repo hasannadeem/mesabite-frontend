@@ -9,7 +9,7 @@ import CloseIcon from "../../assets/images/close-icon.svg";
 import UploadIcon from "../../assets/images/upload-icon.svg";
 
 // Constants
-import { APIS, ROUTES } from "../../constants/routes";
+import { APIS } from "../../constants/routes";
 import { getImageUrl } from "../../utils";
 
 const NewCategoryFolderForm = ({ data, isEditView }) => {
@@ -49,7 +49,7 @@ const NewCategoryFolderForm = ({ data, isEditView }) => {
             ? "Category Folder has been successfully updated"
             : "Category Folder has been successfully added to your menu!"
         );
-        navigate(ROUTES.menu);
+        navigateBack();
       }
     } catch (error) {
       const defaultMessage = isEditView
@@ -67,7 +67,7 @@ const NewCategoryFolderForm = ({ data, isEditView }) => {
   };
 
   const navigateBack = () => {
-    navigate(ROUTES.menu);
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -142,6 +142,7 @@ const NewCategoryFolderForm = ({ data, isEditView }) => {
           <button
             className="button cancel-button"
             disabled={creatingCategoryFolder}
+            type="button"
             onClick={navigateBack}
           >
             Cancel

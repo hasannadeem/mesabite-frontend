@@ -27,9 +27,9 @@ export const fetchMenus = createAsyncThunk(
         };
       }
     } catch (error) {
-      if (!signal?.aborted) {
-        toast.error("Unable to fetch Menus");
-      }
+      if (signal?.aborted) return { aborted: true };
+
+      toast.error("Unable to fetch Menus");
     }
   }
 );
@@ -37,19 +37,21 @@ export const fetchMenus = createAsyncThunk(
 export const menusSlice = createSlice({
   name: "menus",
   initialState: {
-    list: { loading: false, data: [], totalPages: 0 },
+    list: { loading: true, data: [], totalPages: 0, activePage: 1 },
   },
   reducers: {
     setMenus: (state, action) => {
       state.list.data = action.payload;
     },
-    setTotalPages: (state, action) => {
-      state.list.totalPages = action.payload;
+    setActivePage: (state, action) => {
+      state.list.activePage = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMenus.fulfilled, (state, action) => {
+        if (action.payload?.aborted) return;
+
         state.list.loading = false;
         state.list.data = action.payload?.menus || [];
         state.list.totalPages = action.payload?.totalPages || 0;
@@ -63,7 +65,7 @@ export const menusSlice = createSlice({
   },
 });
 
-export const { setMenus, setTotalPages } = menusSlice.actions;
+export const { setMenus, setActivePage } = menusSlice.actions;
 
 export const selectMenus = (state) => state.menus.list;
 

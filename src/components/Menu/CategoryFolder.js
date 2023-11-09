@@ -15,7 +15,7 @@ import PlusIcon from "../../assets/images/plus-outline-white.svg";
 // Constants
 import { APIS, ROUTES } from "../../constants/routes";
 
-const CategoryFolder = ({ className, menu, updateMenus }) => {
+const CategoryFolder = ({ className, menu }) => {
   // Hooks
   const navigate = useNavigate();
 
@@ -31,7 +31,6 @@ const CategoryFolder = ({ className, menu, updateMenus }) => {
         );
 
         if (response.status === 200) {
-          updateMenus();
           toast.success("Category folder has been successfully deleted!");
         }
       } catch (error) {
@@ -83,12 +82,8 @@ const CategoryFolder = ({ className, menu, updateMenus }) => {
         </span>
       </div>
 
-      {menu.attributes.categories.data.map((category) => (
-        <CategoryCard
-          key={category.id}
-          category={category}
-          updateMenus={updateMenus}
-        />
+      {menu.attributes.categories?.data?.map((category) => (
+        <CategoryCard key={category.id} category={category} />
       ))}
     </div>
   );
